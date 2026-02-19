@@ -1,0 +1,2 @@
+# Load apple-ibridge driver stack when iBridge USB device appears
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="05ac", ATTR{idProduct}=="8600", RUN+="/sbin/modprobe apple-ibridge", RUN+="/sbin/modprobe apple-ib-tb", RUN+="/sbin/modprobe apple-ib-als"
