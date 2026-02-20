@@ -3,6 +3,7 @@ set -euo pipefail
 
 DRIVER_DIR="$(cd "$(dirname "$0")/../driver/touchbar" && pwd)"
 UDEV_DIR="$(cd "$(dirname "$0")/../driver/udev" && pwd)"
+MODPROBE_DIR="$(cd "$(dirname "$0")/../driver/modprobe.d" && pwd)"
 DKMS_NAME="appleibridge"
 DKMS_VER="0.1"
 DEST="/usr/src/${DKMS_NAME}-${DKMS_VER}"
@@ -22,6 +23,9 @@ sudo dkms install "${DKMS_NAME}/${DKMS_VER}"
 # udev rules
 sudo cp "$UDEV_DIR/91-apple-touchbar.rules" /etc/udev/rules.d/
 sudo udevadm control --reload-rules
+
+# modprobe options (fnmode=2: default fn keys, fn pressed = special keys)
+sudo cp "$MODPROBE_DIR/apple-touchbar.conf" /etc/modprobe.d/
 
 echo ""
 echo "Done. Reboot to activate Touch Bar."
