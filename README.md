@@ -59,6 +59,23 @@ iw phy phy0 info | grep "Band 2"
 
 > CLM blob（`brcmfmac43602-pcie.clm_blob`）は Broadcom の配布制限により公式リポジトリに存在しない。
 > 未導入でも主要な 5GHz チャンネル（ch36/40/44/48）は問題なく使用できる。
+> BCM43602 はカーネル内で `BRCMF_FW_DEF`（CLM blob 不要）で定義されており、警告ログは非致命的。
+
+#### トラブルシューティング
+
+```bash
+# 再起動後も 5GHz が表示されない → NVRAM が正しくロードされているか確認
+sudo dmesg | grep -i brcm
+
+# ドライバ再ロード時は brcmfmac_wcc を先に外す（依存関係）
+sudo rmmod brcmfmac_wcc brcmfmac && sudo modprobe brcmfmac
+
+# macaddr がズレている場合は NVRAM を再生成
+MACADDR=$(ip link show wlp2s0 | awk '/ether/{print $2}')
+sudo sed -i "s/macaddr=.*/macaddr=${MACADDR}/" /lib/firmware/brcm/brcmfmac43602-pcie.txt
+sudo sed -i "s/macaddr=.*/macaddr=${MACADDR}/" \
+  "/lib/firmware/brcm/brcmfmac43602-pcie.Apple Inc.-MacBookPro14,2.txt"
+```
 
 ### 3. Touch Bar
 
@@ -119,6 +136,22 @@ dkms status
 # usbmuxd が iBridge と競合する場合は停止
 sudo systemctl stop usbmuxd
 ```
+
+#### 既知の問題と解決済み事項
+
+**fn キーで Touch Bar が切り替わらない（解決済み）**
+
+`interception-tools`（caps2esc）が `event4`（物理 SPI キーボード）を exclusive grab するため、
+tbkbd ハンドラが fn キーイベントを受け取れない問題があった。
+
+原因：`applespi` は BUS_SPI キーボードを 2 つ登録する。
+
+- 物理デバイス（`phys="applespi/input0"`）: イベントを発行しない
+- 仮想デバイス（`phys=""`）: KEY_FN を含む実際のイベントを発行する
+
+元のドライバは物理デバイスに接続していたため fn キーが機能しなかった。
+本リポジトリのパッチで `appletb_inp_connect()` が `phys` が空のデバイス（仮想）のみに接続するよう修正済み。
+`interception-tools` との共存も問題なし（仮想デバイスは exclusive grab 対象外）。
 
 ### 4. ファン制御
 
