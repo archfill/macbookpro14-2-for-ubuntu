@@ -218,3 +218,15 @@ macbookpro14-2-for-ubuntu/
 - [Linux on MacBook Pro 2017](https://gist.github.com/roadrunner2/1289542a748d9a104e7baec6a92f9cd7)
 - [Wi-Fi Fix (2025)](https://james.cridland.net/blog/2025/wifi-on-macbook-pro-linux/)
 - [Broadcom Wi-Fi Drivers](https://gist.github.com/torresashjian/e97d954c7f1554b6a017f07d69a66374)
+
+## ライセンス
+
+このリポジトリに含まれる Touch Bar ドライバソース (`driver/touchbar/`) は
+[Ronald Tschalär](https://github.com/roadrunner2) による成果物をベースとし、
+kernel 6.17 対応パッチを加えたものです。
+
+- 原著作者: Ronald Tschalär, Copyright (c) 2017-2018
+- ライセンス: [GNU General Public License v2.0](LICENSE)
+- 参照元: [roadrunner2/macbook12-spi-driver](https://github.com/roadrunner2/macbook12-spi-driver)
+
+セットアップスクリプト・ドキュメント類も同ライセンス（GPL-2.0）の下で配布されます。
