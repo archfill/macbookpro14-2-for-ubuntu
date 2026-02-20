@@ -30,12 +30,17 @@ if confirm "[3] Touch Bar (DKMS driver)?"; then
     echo ""
 fi
 
-if confirm "[4] Japanese input (fcitx5 + Mozc)?"; then
+if confirm "[4] Audio (CS8409 internal speaker, DKMS)?"; then
+    bash "${SCRIPTS_DIR}/setup-audio.sh"
+    echo ""
+fi
+
+if confirm "[5] Japanese input (fcitx5 + Mozc)?"; then
     bash "${SCRIPTS_DIR}/setup-fcitx5.sh"
     echo ""
 fi
 
-if confirm "[5] CapsLock remap (tap=Escape / hold=Ctrl)?"; then
+if confirm "[6] CapsLock remap (tap=Escape / hold=Ctrl)?"; then
     bash "${SCRIPTS_DIR}/setup-capslock.sh"
     echo ""
 fi

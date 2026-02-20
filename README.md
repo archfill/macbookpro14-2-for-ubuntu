@@ -165,13 +165,30 @@ sudo systemctl start mbpfan
 
 ### 5. オーディオ
 
-MacBook Pro用のHDAオーディオ修正が必要な場合がある。
+標準カーネルドライバ（`snd_hda_codec_cs8409`）では内蔵スピーカーが動作しない。
+[davidjo/snd_hda_macbookpro](https://github.com/davidjo/snd_hda_macbookpro) のパッチ済みドライバが必要。
 
 ```bash
-sudo apt install linux-tools-common linux-tools-generic
+./scripts/setup-audio.sh
+sudo reboot
 ```
 
-音が出ない場合は [snd_hda_macbookpro](https://github.com/davidjo/snd_hda_macbookpro) を参照。
+スクリプトが行うこと:
+
+1. `snd_hda_macbookpro` をクローン
+2. Ubuntu HWE カーネル向けパッチを適用（`linux-source` 不要で kernel.org から取得）
+3. DKMS でビルド＆インストール（カーネル更新時に自動再ビルド）
+
+再起動後の確認：
+
+```bash
+sudo dmesg | grep -i "patch_cs8409\|APPLE"
+# "Primary patch_cs8409 NOT FOUND trying APPLE" が表示されれば正常
+```
+
+> MacBook Pro 14,2 (subsystem ID `0x106b3600`) は "compiled but not tested" ステータスだが動作確認済み。
+> Ubuntu HWE カーネル（6.17）では `linux-source` パッケージが存在しないため、
+> `isubuntu=0` で kernel.org ソースを使用するワークアラウンドが必要。
 
 ### 6. 日本語入力（fcitx5 + Mozc）
 
@@ -214,6 +231,7 @@ macbookpro14-2-for-ubuntu/
     ├── setup-base.sh      # 汎用パッケージ（バッテリー・温度・ファン）
     ├── setup-wifi.sh      # Wi-Fi ドライバ・NVRAM セットアップ
     ├── setup-touchbar.sh  # Touch Bar DKMS セットアップ
+    ├── setup-audio.sh     # 内蔵スピーカー（snd_hda_macbookpro DKMS）
     ├── setup-fcitx5.sh    # 日本語入力（fcitx5 + Mozc）
     └── setup-capslock.sh  # CapsLock リマップ（tap=Esc / hold=Ctrl）
 ```
