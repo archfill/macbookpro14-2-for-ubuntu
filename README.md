@@ -17,12 +17,21 @@ MacBook Pro 14,2（2017 13インチ Touch Bar）にUbuntuをインストール�
 
 ## セットアップ手順
 
-### 1. 汎用パッケージ（バッテリー・温度・明るさ）
+### 一括セットアップ
 
 ```bash
-sudo apt install tlp powertop brightnessctl thermald
-sudo systemctl enable tlp
-sudo systemctl enable thermald
+./scripts/setup.sh
+sudo reboot
+```
+
+各セクションを yes/no で選択しながら実行できる。個別に実行する場合は以下の手順を参照。
+
+---
+
+### 1. 汎用パッケージ（バッテリー・温度・明るさ・ファン）
+
+```bash
+./scripts/setup-base.sh
 ```
 
 ### 2. Wi-Fi（Broadcom BCM43602）
@@ -113,7 +122,7 @@ sudo systemctl stop usbmuxd
 
 ### 4. ファン制御
 
-MacBook用のファン制御デーモン。温度に応じてファン速度を自動調整する。
+`setup-base.sh` に含まれている。個別に実行する場合：
 
 ```bash
 sudo apt install mbpfan
@@ -134,48 +143,18 @@ sudo apt install linux-tools-common linux-tools-generic
 ### 6. 日本語入力（fcitx5 + Mozc）
 
 ```bash
-sudo apt install fcitx5 fcitx5-mozc fcitx5-config-qt
-
-# 自動起動設定
-mkdir -p ~/.config/autostart
-cp /usr/share/applications/org.fcitx.Fcitx5.desktop ~/.config/autostart/
-
-# デフォルトIMに設定
-im-config -n fcitx5
+./scripts/setup-fcitx5.sh
 ```
 
-環境変数（`.zshenv`等に追加）：
-
-```bash
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
-```
+環境変数（`GTK_IM_MODULE`, `QT_IM_MODULE`, `XMODIFIERS`）を `~/.zshenv` に自動追記する。
+ログアウト・再ログイン後に有効になる。
 
 ### 7. CapsLock リマップ（タップ=Escape / ホールド=Ctrl）
 
 `interception-tools` + `caps2esc` でカーネル入力レイヤーでリマップする。Wayland/X11/TTY すべてで動作。
 
 ```bash
-sudo apt install interception-tools interception-caps2esc
-```
-
-設定ファイルを作成（Ubuntu 24.04 ではコマンド名がフルパス必須）：
-
-```bash
-sudo tee /etc/interception/udevmon.yaml > /dev/null << 'EOF'
-- JOB: "/usr/bin/interception -g $DEVNODE | /usr/bin/caps2esc -m 1 | /usr/bin/uinput -d $DEVNODE"
-  DEVICE:
-    EVENTS:
-      EV_KEY: [KEY_CAPSLOCK]
-EOF
-```
-
-サービス有効化：
-
-```bash
-sudo systemctl enable udevmon
-sudo systemctl restart udevmon
+./scripts/setup-capslock.sh
 ```
 
 > `-m 1` はタップ=Escape、ホールド=Ctrl のモード。`-m 0`（デフォルト）は CapsLock を完全に Escape に置き換える。
@@ -198,8 +177,12 @@ macbookpro14-2-for-ubuntu/
 │   └── udev/
 │       └── 91-apple-touchbar.rules
 └── scripts/
-    ├── setup-touchbar.sh  # Touch Bar DKMS セットアップ自動化
-    └── setup-wifi.sh      # Wi-Fi ドライバ・NVRAM セットアップ自動化
+    ├── setup.sh           # 一括セットアップ（各項目を yes/no で選択）
+    ├── setup-base.sh      # 汎用パッケージ（バッテリー・温度・ファン）
+    ├── setup-wifi.sh      # Wi-Fi ドライバ・NVRAM セットアップ
+    ├── setup-touchbar.sh  # Touch Bar DKMS セットアップ
+    ├── setup-fcitx5.sh    # 日本語入力（fcitx5 + Mozc）
+    └── setup-capslock.sh  # CapsLock リマップ（tap=Esc / hold=Ctrl）
 ```
 
 ## パッケージ一覧
