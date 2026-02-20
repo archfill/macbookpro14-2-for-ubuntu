@@ -212,6 +212,39 @@ if (!udev->actconfig ||
 **probe 内からは呼ばれないように修正**。sysfs や suspend/resume など
 device_lock 非保持のコンテキストからのみ呼ばれる設計。
 
+### 修正 4: fn キー検出の修正（appletb_inp_connect）
+
+**ファイル**: `apple-ib-tb.c`
+
+**問題**: fn キーを押しても Touch Bar の表示モードが切り替わらない。
+
+**原因**: applespi は同じ `BUS_SPI` で 2 つのキーボード input デバイスを登録する:
+
+| デバイス     | Phys              | 実際の動作                            |
+| ------------ | ----------------- | ------------------------------------- |
+| input4 (例)  | `applespi/input0` | キーイベントを**発行しない**          |
+| input12 (例) | `""` (空)         | KEY_FN を含む実際のキーイベントを発行 |
+
+apple-ib-tb の `appletb_inp_connect()` は最初にマッチした input4 に接続し、
+input12 を「Duplicate connect」として拒否していた。そのため KEY_FN イベントが
+ドライバに届かず fn キー切り替えが機能しなかった。
+
+**修正**: Phys が空でないデバイス（物理デバイス）をスキップする:
+
+```c
+/* Skip the raw SPI device (has phys), connect only to virtual one (empty phys) */
+if (dev->phys && dev->phys[0] != '\0')
+    return -ENODEV;
+```
+
+**呼び出し箇所**: `appletb_inp_connect()` 内、APPLETB_DEVID_KEYBOARD の分岐先
+
+**調査で判明した背景**:
+
+- `cat /dev/input/event4` では何も出力されない（物理デバイスはイベントを出さない）
+- `cat /dev/input/event12` では KEY_FN (code=0x01d0=464) が正常に出力される
+- EVIOCGRAB（interception-tools / udevmon）はカーネル input ハンドラには影響しない
+
 ---
 
 ## USB コア関連の背景知識
