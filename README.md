@@ -269,4 +269,11 @@ kernel 6.17 対応パッチを加えたものです。
 - ライセンス: [GNU General Public License v2.0](LICENSE)
 - 参照元: [roadrunner2/macbook12-spi-driver](https://github.com/roadrunner2/macbook12-spi-driver)
 
+オーディオセットアップスクリプト (`scripts/setup-audio.sh`) は
+[davidjo/snd_hda_macbookpro](https://github.com/davidjo/snd_hda_macbookpro) を
+DKMS 経由でインストールするものです。同リポジトリも GPL-2.0 ライセンスで配布されています。
+
+- 参照元: [davidjo/snd_hda_macbookpro](https://github.com/davidjo/snd_hda_macbookpro)
+- ライセンス: [GNU General Public License v2.0](LICENSE)
+
 セットアップスクリプト・ドキュメント類も同ライセンス（GPL-2.0）の下で配布されます。
