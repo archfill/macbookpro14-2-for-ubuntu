@@ -167,7 +167,22 @@ bluetoothctl show
 > Linux 側からの追加パッチは不要（むしろ適用しようとすると `fc4c failed (-16)` でチップが壊れる）。
 > BCM.hcd を `/lib/firmware/brcm/` に置いてはいけない。
 
-### 5. オーディオ
+### 5. タッチパッド
+
+タップ・スクロール・ジェスチャーは標準で動作する。ただしデフォルト状態ではタイピング中にタッチパッドが誤反応することがある。
+
+#### タイピング中の誤反応修正（DWT）
+
+`applespi` ドライバが Keyboard の vendor ID を `0x0000` で報告するため、libinput が内蔵キーボードと認識せず Disable-While-Typing（DWT）が正しくペアリングされない。カスタム quirk で修正する。
+
+```bash
+./scripts/setup-touchpad.sh
+sudo reboot
+```
+
+> 再起動後、タイピング中のタッチパッド誤反応が改善される。
+
+### 6. オーディオ
 
 標準カーネルドライバ（`snd_hda_codec_cs8409`）では内蔵スピーカーが動作しない。
 [davidjo/snd_hda_macbookpro](https://github.com/davidjo/snd_hda_macbookpro) のパッチ済みドライバが必要。
@@ -194,7 +209,7 @@ sudo dmesg | grep -i "patch_cs8409\|APPLE"
 > Ubuntu HWE カーネル（6.17）では `linux-source` パッケージが存在しないため、
 > `isubuntu=0` で kernel.org ソースを使用するワークアラウンドが必要。
 
-### 6. 日本語入力（fcitx5 + Mozc）
+### 7. 日本語入力（fcitx5 + Mozc）
 
 ```bash
 ./scripts/setup-fcitx5.sh
@@ -203,7 +218,7 @@ sudo dmesg | grep -i "patch_cs8409\|APPLE"
 環境変数（`GTK_IM_MODULE`, `QT_IM_MODULE`, `XMODIFIERS`）を `~/.zshenv` に自動追記する。
 ログアウト・再ログイン後に有効になる。
 
-### 7. CapsLock リマップ（タップ=Escape / ホールド=Ctrl）
+### 8. CapsLock リマップ（タップ=Escape / ホールド=Ctrl）
 
 `interception-tools` + `caps2esc` でカーネル入力レイヤーでリマップする。Wayland/X11/TTY すべてで動作。
 
@@ -228,6 +243,8 @@ macbookpro14-2-for-ubuntu/
 │   │   └── dkms.conf
 │   ├── modprobe.d/
 │   │   └── apple-touchbar.conf
+│   ├── libinput/
+│   │   └── local-overrides.quirks  # タッチパッド DWT quirk
 │   └── udev/
 │       └── 91-apple-touchbar.rules
 └── scripts/
@@ -235,6 +252,7 @@ macbookpro14-2-for-ubuntu/
     ├── setup-base.sh      # 汎用パッケージ（バッテリー・温度・ファン）
     ├── setup-wifi.sh      # Wi-Fi ドライバ・NVRAM セットアップ
     ├── setup-touchbar.sh  # Touch Bar DKMS セットアップ
+    ├── setup-touchpad.sh  # タッチパッド DWT 修正
     ├── setup-audio.sh     # 内蔵スピーカー（snd_hda_macbookpro DKMS）
     ├── setup-fcitx5.sh    # 日本語入力（fcitx5 + Mozc）
     └── setup-capslock.sh  # CapsLock リマップ（tap=Esc / hold=Ctrl）

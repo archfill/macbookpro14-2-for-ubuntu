@@ -1,0 +1,10 @@
+# Apple SPI Keyboard - mark as internal for proper DWT pairing with touchpad
+#
+# The applespi driver reports vendor=0x0000 which doesn't match the upstream
+# 50-system-apple.quirks entry (MatchVendor=0x05AC), so AttrKeyboardIntegration=internal
+# is never applied. Without this, libinput cannot pair the keyboard with the touchpad
+# for Disable-While-Typing (DWT), causing accidental touchpad inputs while typing.
+[Apple SPI Keyboard (applespi driver)]
+MatchName=Apple SPI Keyboard
+MatchUdevType=keyboard
+AttrKeyboardIntegration=internal
