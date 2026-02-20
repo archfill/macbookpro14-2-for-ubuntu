@@ -279,18 +279,29 @@ macbookpro14-2-for-ubuntu/
 
 ## パッケージ一覧
 
-| カテゴリ     | パッケージ                                    | 用途                      |
-| ------------ | --------------------------------------------- | ------------------------- |
-| バッテリー   | `tlp`                                         | バッテリー最適化          |
-| バッテリー   | `powertop`                                    | 電力消費分析              |
-| 温度管理     | `thermald`                                    | CPU温度管理（Intel）      |
-| 明るさ       | `brightnessctl`                               | 画面の明るさ調整          |
-| Wi-Fi        | `firmware-b43-installer`                      | Broadcom BCM43602ドライバ |
-| Touch Bar    | `appleibridge` (DKMS)                         | Touch Bar有効化           |
-| ファン       | `mbpfan`                                      | MacBook用ファン制御       |
-| 日本語入力   | `fcitx5`, `fcitx5-mozc`                       | 日本語入力メソッド        |
-| タッチパッド | `libinput`                                    | トラックパッド対応        |
-| キーリマップ | `interception-tools`, `interception-caps2esc` | CapsLock→Escape/Ctrl      |
+| カテゴリ     | パッケージ               | 用途                          |
+| ------------ | ------------------------ | ----------------------------- |
+| バッテリー   | `tlp`                    | バッテリー最適化              |
+| バッテリー   | `powertop`               | 電力消費分析                  |
+| 温度管理     | `thermald`               | CPU温度管理（Intel）          |
+| 明るさ       | `brightnessctl`          | 画面の明るさ調整              |
+| Wi-Fi        | `firmware-b43-installer` | Broadcom BCM43602ドライバ     |
+| Touch Bar    | `appleibridge` (DKMS)    | Touch Bar有効化               |
+| ファン       | `mbpfan`                 | MacBook用ファン制御           |
+| 日本語入力   | `fcitx5`, `fcitx5-mozc`  | 日本語入力メソッド            |
+| タッチパッド | `libinput`               | トラックパッド対応            |
+| キーリマップ | `keyd`                   | CapsLock/Command キーリマップ |
+
+## GNOME 拡張機能
+
+| 拡張機能                                                                    | 用途                                            |
+| --------------------------------------------------------------------------- | ----------------------------------------------- |
+| [Astra Monitor](https://extensions.gnome.org/extension/6682/astra-monitor/) | CPU・メモリ・NVMe・ネットワーク統合モニタリング |
+
+```bash
+# Extension Manager でインストール
+sudo apt install gnome-shell-extension-manager
+```
 
 ## 参考リンク
 
