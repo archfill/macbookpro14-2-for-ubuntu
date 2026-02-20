@@ -27,41 +27,29 @@ sudo systemctl enable thermald
 
 ### 2. Wi-Fi（Broadcom BCM43602）
 
-MacBookのBroadcomチップはデフォルトドライバでは接続が不安定。ドライバ差し替えと送信電力の制限が必要。
+MacBookのBroadcomチップはデフォルトドライバでは接続が不安定。ドライバ差し替えと送信電力の制限、5GHz 用 NVRAM ファイルの導入が必要。
+
+#### セットアップ（自動）
 
 ```bash
-# ドライバ修正
-sudo apt purge bcmwl-kernel-source
-sudo apt update
-sudo update-pciids
-sudo apt install firmware-b43-installer
+./scripts/setup-wifi.sh
 sudo reboot
 ```
 
-再起動後、送信電力を制限して接続を安定化：
+スクリプトが行うこと:
+
+1. `bcmwl-kernel-source` を削除し `firmware-b43-installer` に差し替え
+2. NVRAM ファイル（`brcmfmac43602-pcie.txt`）を取得・インストール → 5GHz 有効化
+3. 送信電力制限サービス（`set-wifi-power.service`）を配置・有効化
+
+再起動後、5GHz の確認：
 
 ```bash
-sudo iwconfig wlp2s0 txpower 10dBm
+iw phy phy0 info | grep "Band 2"
 ```
 
-#### 送信電力設定の永続化（systemdサービス）
-
-```bash
-sudo tee /etc/systemd/system/set-wifi-power.service > /dev/null << 'EOF'
-[Unit]
-Description=Set WiFi TX Power for Broadcom BCM43602
-After=network.target
-
-[Service]
-ExecStart=/sbin/iwconfig wlp2s0 txpower 10dBm
-Type=oneshot
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl enable set-wifi-power.service
-```
+> CLM blob（`brcmfmac43602-pcie.clm_blob`）は Broadcom の配布制限により公式リポジトリに存在しない。
+> 未導入でも主要な 5GHz チャンネル（ch36/40/44/48）は問題なく使用できる。
 
 ### 3. Touch Bar
 
@@ -205,10 +193,13 @@ macbookpro14-2-for-ubuntu/
 │   │   ├── apple-ib-als.c
 │   │   ├── Makefile
 │   │   └── dkms.conf
+│   ├── modprobe.d/
+│   │   └── apple-touchbar.conf
 │   └── udev/
 │       └── 91-apple-touchbar.rules
 └── scripts/
-    └── setup-touchbar.sh  # DKMS セットアップ自動化
+    ├── setup-touchbar.sh  # Touch Bar DKMS セットアップ自動化
+    └── setup-wifi.sh      # Wi-Fi ドライバ・NVRAM セットアップ自動化
 ```
 
 ## パッケージ一覧
