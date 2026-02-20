@@ -4,14 +4,16 @@ MacBook Pro 14,2（2017 13インチ Touch Bar）にUbuntuをインストール�
 
 ## ハードウェア情報
 
-| 項目        | 詳細              |
-| ----------- | ----------------- |
-| モデル      | MacBookPro14,2    |
-| 年式        | 2017 Mid          |
-| サイズ      | 13インチ          |
-| Touch Bar   | あり              |
-| Wi-Fiチップ | Broadcom BCM43602 |
-| CPU         | Intel             |
+| 項目         | 詳細               |
+| ------------ | ------------------ |
+| モデル       | MacBookPro14,2     |
+| 年式         | 2017 Mid           |
+| サイズ       | 13インチ           |
+| Touch Bar    | あり               |
+| Wi-Fiチップ  | Broadcom BCM43602  |
+| CPU          | Intel              |
+| 対象 OS      | Ubuntu 24.04.4 LTS |
+| 対象カーネル | 6.17.0-14-generic  |
 
 ## セットアップ手順
 
