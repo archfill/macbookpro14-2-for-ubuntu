@@ -10,6 +10,9 @@ DEST="/usr/src/${DKMS_NAME}-${DKMS_VER}"
 
 echo "=== Touch Bar Driver Setup (DKMS) ==="
 
+echo "[0/4] Installing dependencies..."
+sudo apt install -y dkms build-essential linux-headers-$(uname -r)
+
 # Remove existing DKMS registration
 sudo dkms remove "${DKMS_NAME}/${DKMS_VER}" --all 2>/dev/null || true
 sudo rm -rf "$DEST"

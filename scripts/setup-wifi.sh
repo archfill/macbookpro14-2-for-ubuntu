@@ -12,7 +12,7 @@ echo "[1/4] Replacing driver..."
 sudo apt purge -y bcmwl-kernel-source 2>/dev/null || true
 sudo apt update -qq
 sudo update-pciids -q 2>/dev/null || true
-sudo apt install -y firmware-b43-installer
+sudo apt install -y firmware-b43-installer wget
 
 # 2. NVRAM file for 5GHz support
 echo "[2/4] Installing NVRAM file for 5GHz support..."
