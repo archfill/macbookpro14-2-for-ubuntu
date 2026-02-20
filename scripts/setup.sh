@@ -45,8 +45,8 @@ if confirm "[6] Japanese input (fcitx5 + Mozc)?"; then
     echo ""
 fi
 
-if confirm "[7] CapsLock remap (tap=Escape / hold=Ctrl)?"; then
-    bash "${SCRIPTS_DIR}/setup-capslock.sh"
+if confirm "[7] Keyboard customization (keyd: CapsLock + Command IME)?"; then
+    bash "${SCRIPTS_DIR}/setup-keyd.sh"
     echo ""
 fi
 

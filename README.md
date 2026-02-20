@@ -218,15 +218,32 @@ sudo dmesg | grep -i "patch_cs8409\|APPLE"
 環境変数（`GTK_IM_MODULE`, `QT_IM_MODULE`, `XMODIFIERS`）を `~/.zshenv` に自動追記する。
 ログアウト・再ログイン後に有効になる。
 
-### 8. CapsLock リマップ（タップ=Escape / ホールド=Ctrl）
+### 8. キーボードカスタマイズ（keyd）
 
-`interception-tools` + `caps2esc` でカーネル入力レイヤーでリマップする。Wayland/X11/TTY すべてで動作。
+`keyd` で内蔵キーボードのみにリマップを適用する。外付けキーボードには影響しない。
 
 ```bash
-./scripts/setup-capslock.sh
+./scripts/setup-keyd.sh
+sudo reboot
 ```
 
-> `-m 1` はタップ=Escape、ホールド=Ctrl のモード。`-m 0`（デフォルト）は CapsLock を完全に Escape に置き換える。
+スクリプトが行うこと:
+
+1. `keyd` をインストール（PPA 経由）
+2. `interception-tools` を無効化（keyd に統合）
+3. 内蔵キーボード専用の keyd 設定を配置
+4. GNOME キーバインド調整（`Super+Space` → アクティビティ）
+5. fcitx5 のホットキーを Muhenkan/Henkan に更新
+
+#### キーマッピング
+
+| キー       | タップ           | ホールド |
+| ---------- | ---------------- | -------- |
+| CapsLock   | Escape           | Ctrl     |
+| 左 Command | 英数（Muhenkan） | Super    |
+| 右 Command | かな（Henkan）   | Super    |
+
+> `Super+Space` でアクティビティ表示。`Super+Tab` などの組み合わせはそのまま動作。
 
 ## ディレクトリ構成
 
@@ -245,6 +262,8 @@ macbookpro14-2-for-ubuntu/
 │   │   └── apple-touchbar.conf
 │   ├── libinput/
 │   │   └── local-overrides.quirks  # タッチパッド DWT quirk
+│   ├── keyd/
+│   │   └── macbook-internal.conf   # キーボードリマップ（keyd）
 │   └── udev/
 │       └── 91-apple-touchbar.rules
 └── scripts/
@@ -255,7 +274,7 @@ macbookpro14-2-for-ubuntu/
     ├── setup-touchpad.sh  # タッチパッド DWT 修正
     ├── setup-audio.sh     # 内蔵スピーカー（snd_hda_macbookpro DKMS）
     ├── setup-fcitx5.sh    # 日本語入力（fcitx5 + Mozc）
-    └── setup-capslock.sh  # CapsLock リマップ（tap=Esc / hold=Ctrl）
+    └── setup-keyd.sh      # キーボードカスタマイズ（keyd）
 ```
 
 ## パッケージ一覧
