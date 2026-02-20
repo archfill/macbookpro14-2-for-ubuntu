@@ -167,17 +167,7 @@ bluetoothctl show
 > Linux 側からの追加パッチは不要（むしろ適用しようとすると `fc4c failed (-16)` でチップが壊れる）。
 > BCM.hcd を `/lib/firmware/brcm/` に置いてはいけない。
 
-### 6. ファン制御
-
-`setup-base.sh` に含まれている。個別に実行する場合：
-
-```bash
-sudo apt install mbpfan
-sudo systemctl enable mbpfan
-sudo systemctl start mbpfan
-```
-
-### 7. オーディオ
+### 5. オーディオ
 
 標準カーネルドライバ（`snd_hda_codec_cs8409`）では内蔵スピーカーが動作しない。
 [davidjo/snd_hda_macbookpro](https://github.com/davidjo/snd_hda_macbookpro) のパッチ済みドライバが必要。
@@ -204,7 +194,7 @@ sudo dmesg | grep -i "patch_cs8409\|APPLE"
 > Ubuntu HWE カーネル（6.17）では `linux-source` パッケージが存在しないため、
 > `isubuntu=0` で kernel.org ソースを使用するワークアラウンドが必要。
 
-### 8. 日本語入力（fcitx5 + Mozc）
+### 6. 日本語入力（fcitx5 + Mozc）
 
 ```bash
 ./scripts/setup-fcitx5.sh
@@ -213,7 +203,7 @@ sudo dmesg | grep -i "patch_cs8409\|APPLE"
 環境変数（`GTK_IM_MODULE`, `QT_IM_MODULE`, `XMODIFIERS`）を `~/.zshenv` に自動追記する。
 ログアウト・再ログイン後に有効になる。
 
-### 9. CapsLock リマップ（タップ=Escape / ホールド=Ctrl）
+### 7. CapsLock リマップ（タップ=Escape / ホールド=Ctrl）
 
 `interception-tools` + `caps2esc` でカーネル入力レイヤーでリマップする。Wayland/X11/TTY すべてで動作。
 
