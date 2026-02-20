@@ -4,6 +4,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
+echo "[touchpad] Installing dependencies..."
+sudo apt install -y libinput-tools
+
 echo "[touchpad] Installing libinput quirks for DWT fix..."
 
 sudo mkdir -p /etc/libinput
