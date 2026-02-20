@@ -483,4 +483,5 @@ sudo dmesg | grep -i -E 'hung_task|blocked|deadlock|lockdep'
 
 _最終更新: 2026-02-20_
 _対象カーネル: 6.17.0-14-generic_
+_対象 OS: Ubuntu 24.04.4 LTS_
 _DKMS パッケージ: appleibridge/0.1_
