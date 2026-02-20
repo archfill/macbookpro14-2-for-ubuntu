@@ -153,7 +153,16 @@ tbkbd ハンドラが fn キーイベントを受け取れない問題があっ�
 本リポジトリのパッチで `appletb_inp_connect()` が `phys` が空のデバイス（仮想）のみに接続するよう修正済み。
 `interception-tools` との共存も問題なし（仮想デバイスは exclusive grab 対象外）。
 
-### 4. ファン制御
+### 4. Bluetooth
+
+追加設定不要。標準で動作する。マウス等の接続も問題なし。
+
+```bash
+# 状態確認
+bluetoothctl show
+```
+
+### 6. ファン制御
 
 `setup-base.sh` に含まれている。個別に実行する場合：
 
@@ -163,7 +172,7 @@ sudo systemctl enable mbpfan
 sudo systemctl start mbpfan
 ```
 
-### 5. オーディオ
+### 7. オーディオ
 
 標準カーネルドライバ（`snd_hda_codec_cs8409`）では内蔵スピーカーが動作しない。
 [davidjo/snd_hda_macbookpro](https://github.com/davidjo/snd_hda_macbookpro) のパッチ済みドライバが必要。
@@ -190,7 +199,7 @@ sudo dmesg | grep -i "patch_cs8409\|APPLE"
 > Ubuntu HWE カーネル（6.17）では `linux-source` パッケージが存在しないため、
 > `isubuntu=0` で kernel.org ソースを使用するワークアラウンドが必要。
 
-### 6. 日本語入力（fcitx5 + Mozc）
+### 8. 日本語入力（fcitx5 + Mozc）
 
 ```bash
 ./scripts/setup-fcitx5.sh
@@ -199,7 +208,7 @@ sudo dmesg | grep -i "patch_cs8409\|APPLE"
 環境変数（`GTK_IM_MODULE`, `QT_IM_MODULE`, `XMODIFIERS`）を `~/.zshenv` に自動追記する。
 ログアウト・再ログイン後に有効になる。
 
-### 7. CapsLock リマップ（タップ=Escape / ホールド=Ctrl）
+### 9. CapsLock リマップ（タップ=Escape / ホールド=Ctrl）
 
 `interception-tools` + `caps2esc` でカーネル入力レイヤーでリマップする。Wayland/X11/TTY すべてで動作。
 
