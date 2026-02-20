@@ -887,6 +887,14 @@ static int appletb_inp_connect(struct input_handler *handler,
 	int rc;
 
 	if (id->driver_info == APPLETB_DEVID_KEYBOARD) {
+		/*
+		 * applespi registers two BUS_SPI keyboard input devices:
+		 *   1. Physical device (phys="applespi/input0") - emits no events
+		 *   2. Virtual device  (phys="")               - emits actual key events
+		 * Connect only to the virtual one (empty phys) so KEY_FN is received.
+		 */
+		if (dev->phys && dev->phys[0] != '\0')
+			return -ENODEV;
 		handle = &tb_dev->kbd_handle;
 		handle->name = "tbkbd";
 	} else if (id->driver_info == APPLETB_DEVID_TOUCHPAD) {
